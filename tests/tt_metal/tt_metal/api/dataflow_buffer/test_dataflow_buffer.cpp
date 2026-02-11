@@ -125,7 +125,7 @@ void run_single_dfb_program(
             "tests/tt_metal/tt_metal/test_kernels/dataflow/dfb_producer.cpp",
             logical_core,
             experimental::quasar::QuasarDataMovementConfig{
-                .num_processors_per_cluster = dfb_config.num_producers, .compile_args = producer_cta});
+                .num_threads_per_cluster = dfb_config.num_producers, .compile_args = producer_cta});
         auto producer_quasar = std::dynamic_pointer_cast<experimental::quasar::QuasarDataMovementKernel>(
             program.impl().get_kernel(producer_kernel));
         const auto& producer_dms = producer_quasar->get_dm_processors();
@@ -157,7 +157,7 @@ void run_single_dfb_program(
             "tests/tt_metal/tt_metal/test_kernels/dataflow/dfb_consumer.cpp",
             logical_core,
             experimental::quasar::QuasarDataMovementConfig{
-                .num_processors_per_cluster = dfb_config.num_consumers, .compile_args = consumer_cta});
+                .num_threads_per_cluster = dfb_config.num_consumers, .compile_args = consumer_cta});
         auto consumer_quasar = std::dynamic_pointer_cast<experimental::quasar::QuasarDataMovementKernel>(
             program.impl().get_kernel(consumer_kernel));
         const auto& consumer_dms = consumer_quasar->get_dm_processors();
@@ -233,7 +233,7 @@ void run_in_dfb_out_dfb_program(
         "tests/tt_metal/tt_metal/test_kernels/dataflow/dfb_producer.cpp",
         logical_core,
         experimental::quasar::QuasarDataMovementConfig{
-            .num_processors_per_cluster = dm2tensix_config.num_producers, .compile_args = producer_cta});
+            .num_threads_per_cluster = dm2tensix_config.num_producers, .compile_args = producer_cta});
     auto producer_quasar = std::dynamic_pointer_cast<experimental::quasar::QuasarDataMovementKernel>(
         program.impl().get_kernel(producer_kernel));
     const auto& producer_dms = producer_quasar->get_dm_processors();
@@ -262,7 +262,7 @@ void run_in_dfb_out_dfb_program(
         "tests/tt_metal/tt_metal/test_kernels/dataflow/dfb_consumer.cpp",
         logical_core,
         experimental::quasar::QuasarDataMovementConfig{
-            .num_processors_per_cluster = tensix2dm_config.num_consumers, .compile_args = consumer_cta});
+            .num_threads_per_cluster = tensix2dm_config.num_consumers, .compile_args = consumer_cta});
     auto consumer_quasar = std::dynamic_pointer_cast<experimental::quasar::QuasarDataMovementKernel>(
         program.impl().get_kernel(consumer_kernel));
     const auto& consumer_dms = consumer_quasar->get_dm_processors();

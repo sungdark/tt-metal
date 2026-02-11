@@ -73,7 +73,7 @@ void RunOneTest(
                 path,
                 coord,
                 experimental::quasar::QuasarDataMovementConfig{
-                    .num_processors_per_cluster = dms_per_kernel, .compile_args = compile_args});
+                    .num_threads_per_cluster = dms_per_kernel, .compile_args = compile_args});
         }
     } else {
         // BH/WH:
