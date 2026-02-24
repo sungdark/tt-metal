@@ -267,6 +267,20 @@ def _golden_function_pow(input_tensor_a, exponent, *args, **kwargs):
 ttnn.attach_golden_function(ttnn.pow, golden_function=_golden_function_pow)
 
 
+def _golden_function_xielu(x, *args, alpha_p=0.8, alpha_n=0.8, **kwargs):
+    import torch
+
+    beta = 0.5
+    eps = -1e-6
+    pos_part = alpha_p * x * x + beta * x
+    x_clipped = torch.minimum(x, torch.full_like(x, eps))
+    neg_part = alpha_n * torch.expm1(x_clipped) - alpha_n * x + beta * x
+    return torch.where(x > 0, pos_part, neg_part)
+
+
+ttnn.attach_golden_function(ttnn.xielu, golden_function=_golden_function_xielu)
+
+
 def _golden_function_elu(input_tensor_a, *args, alpha=1.0, **kwargs):
     import torch
 
