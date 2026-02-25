@@ -22,6 +22,7 @@ from models.demos.deepseek_v3_b1.blitz_decode_weights import BlitzDecodeWeights
 from models.demos.deepseek_v3_b1.fused_ops.down_proj.op import DownProj
 from models.demos.deepseek_v3_b1.fused_ops.moe.op import MoeOp
 from models.demos.deepseek_v3_b1.fused_ops.shared_expert.op import SharedExpertOp
+from models.demos.deepseek_v3_b1.model_configs import BLITZ_DEFAULT_FABRIC_ROUTER_CONFIG
 
 
 # ============================================================================
@@ -557,7 +558,14 @@ def test_moe_fused(device, use_hardcoded_expert_index):
 @skip_for_wormhole_b0("This test is for blackhole")
 @pytest.mark.parametrize(
     "device_params",
-    [({"fabric_config": ttnn.FabricConfig.FABRIC_2D})],
+    [
+        (
+            {
+                "fabric_config": ttnn.FabricConfig.FABRIC_2D,
+                "fabric_router_config": BLITZ_DEFAULT_FABRIC_ROUTER_CONFIG,
+            }
+        )
+    ],
     indirect=["device_params"],
     ids=["fabric_2d"],
 )
@@ -927,7 +935,14 @@ def test_mlp(device):
 @skip_for_wormhole_b0("This test is for blackhole")
 @pytest.mark.parametrize(
     "device_params",
-    [({"fabric_config": ttnn.FabricConfig.FABRIC_2D})],
+    [
+        (
+            {
+                "fabric_config": ttnn.FabricConfig.FABRIC_2D,
+                "fabric_router_config": BLITZ_DEFAULT_FABRIC_ROUTER_CONFIG,
+            }
+        )
+    ],
     indirect=["device_params"],
     ids=["fabric_2d"],
 )

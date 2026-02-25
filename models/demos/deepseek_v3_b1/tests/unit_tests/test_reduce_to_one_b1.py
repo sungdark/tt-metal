@@ -16,6 +16,7 @@ from tracy import signpost
 import ttnn
 from models.common.utility_functions import skip_for_wormhole_b0
 from models.demos.deepseek_v3_b1.micro_ops.reduce_to_one_b1.op import ReduceToOneB1
+from models.demos.deepseek_v3_b1.model_configs import BLITZ_DEFAULT_FABRIC_ROUTER_CONFIG
 from models.perf.benchmarking_utils import BenchmarkProfiler
 
 
@@ -329,7 +330,14 @@ def run_reduce_to_one_with_trace(mesh_device):
 @skip_for_wormhole_b0("This test is for blackhole")
 @pytest.mark.parametrize(
     "device_params",
-    [({"fabric_config": ttnn.FabricConfig.FABRIC_1D, "fabric_router_config": create_fabric_router_config(15232)})],
+    [
+        (
+            {
+                "fabric_config": ttnn.FabricConfig.FABRIC_1D,
+                "fabric_router_config": BLITZ_DEFAULT_FABRIC_ROUTER_CONFIG,
+            }
+        )
+    ],
     indirect=["device_params"],
     ids=["fabric_1d"],
 )
@@ -341,7 +349,14 @@ def test_reduce_to_one_1d(bh_2d_mesh_device):
 @skip_for_wormhole_b0("This test is for blackhole")
 @pytest.mark.parametrize(
     "device_params",
-    [({"fabric_config": ttnn.FabricConfig.FABRIC_2D, "fabric_router_config": create_fabric_router_config(15232)})],
+    [
+        (
+            {
+                "fabric_config": ttnn.FabricConfig.FABRIC_2D,
+                "fabric_router_config": BLITZ_DEFAULT_FABRIC_ROUTER_CONFIG,
+            }
+        )
+    ],
     indirect=["device_params"],
     ids=["fabric_2d"],
 )
@@ -358,8 +373,8 @@ def test_reduce_to_one_2d(bh_2d_mesh_device):
         (
             {
                 "fabric_config": ttnn.FabricConfig.FABRIC_1D,
+                "fabric_router_config": BLITZ_DEFAULT_FABRIC_ROUTER_CONFIG,
                 "trace_region_size": 425984,
-                "fabric_router_config": create_fabric_router_config(15232),
             }
         )
     ],
@@ -378,8 +393,8 @@ def test_reduce_to_one_with_trace_1d(bh_2d_mesh_device):
         (
             {
                 "fabric_config": ttnn.FabricConfig.FABRIC_2D,
+                "fabric_router_config": BLITZ_DEFAULT_FABRIC_ROUTER_CONFIG,
                 "trace_region_size": 425984,
-                "fabric_router_config": create_fabric_router_config(15232),
             }
         )
     ],
