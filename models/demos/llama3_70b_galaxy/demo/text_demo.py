@@ -588,8 +588,8 @@ def create_tt_model(
             False,  # use_prefix_caching
             0.0,  # prefix_cached_ratio
         ),
-        (  # batch-1-prefix-caching - 1 user, small prompt, prefix caching (performance)
-            "models/demos/llama3_70b_galaxy/demo/sample_prompts/input_data_questions_prefill_128.json",  # input_prompts
+        (  # batch-1-prefix-caching-perf - 1 user, long enough prompt, prefix caching (performance)
+            "models/demos/llama3_70b_galaxy/demo/sample_prompts/input_data_long_4k.json",  # input_prompts
             True,  # instruct mode
             1,  # repeat_batches
             128 * 1024,  # max_seq_len
@@ -607,7 +607,7 @@ def create_tt_model(
             False,  # is_cur_pos_sharded
             False,  # is_page_table_sharded
             True,  # use_prefix_caching
-            0.5,  # prefix_cached_ratio
+            0.75,  # prefix_cached_ratio
         ),
         (  # batch-1-prefix-caching-pcc - 1 user, prefix caching with PCC (correctness)
             "models/demos/llama3_70b_galaxy/demo/sample_prompts/input_data_questions_reference.json",  # input_prompts
@@ -650,7 +650,7 @@ def create_tt_model(
         "prefill-profile-prefix-caching",  # prefill-only, Phase 2 (prefix-cached) only, 50% cache
         "apc-test",  # apc check for 80L + teacher forced for prefill + pcc check on prefill and 1st decode token
         "pcc-80L",  # pcc check for 80L + teacher forced
-        "batch-1-prefix-caching",  # 1 user, prefix caching (performance)
+        "batch-1-prefix-caching-perf",  # 1 user, prefix caching (performance)
         "batch-1-prefix-caching-pcc",  # 1 user, prefix caching with PCC (correctness)
     ],
 )
@@ -1018,17 +1018,6 @@ def test_demo_text(
                 # Number of cached tokens must be a multiple of KV cache page size
                 page_block_size = page_params["page_block_size"]
                 num_cached_tokens = (num_cached_tokens // page_block_size) * page_block_size
-                # Dry run to capture the trace for Phase 2 (warmup does not cover this)
-                toks = generator.prefill_forward_text(
-                    input_tokens_prefill_pt,
-                    page_table=page_table,
-                    kv_cache=tt_kv_cache,
-                    prompt_lens=decoding_pos,
-                    enable_trace=prefill_enable_trace,
-                    tt_out_logits_all_users=tt_out_logits_all_users,
-                    sampling_params=device_sampling_params,
-                    start_pos=[num_cached_tokens],
-                )
                 if prefill_profile:
                     signpost("start")
                 profiler.start(f"inference_prefill", iteration=batch_idx)
