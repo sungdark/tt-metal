@@ -1389,10 +1389,7 @@ def test_demo_text(
     compile_prefill_time = profiler.get_duration("compile_prefill")
     compile_decode_time = profiler.get_duration("compile_decode")
 
-    if repeat_batches > 1 and profiler.contains_step("inference_prefill", 1):
-        total_inference_prefill_time = profiler.get_duration("inference_prefill", iteration=1)
-    else:
-        total_inference_prefill_time = profiler.get_duration("inference_prefill")
+    total_inference_prefill_time = profiler.get_duration("inference_prefill")
     total_inference_decode_time = 0
     for i in range(1, iteration):  # Iteration 0 is the compile time
         total_inference_decode_time += profiler.get_duration(f"inference_decode_time_{i}")

@@ -916,8 +916,6 @@ class Generator(WarmupForwardMixin):
         )
         # Update column_mask reference to the trace-capture buffer (trace reads from this buffer on replay)
         self._set_prefill_column_mask(device_inputs[5])
-        # Recorded trace must see CCL indices at 0; replay path resets before execute_trace.
-        self.model.tt_ccl.reset_gather_and_buffer_idx()
         trace_id = ttnn.begin_trace_capture(self.mesh_device, cq_id=0)
         transformed_inputs = self.model.transform_prefill_inputs_device(*device_inputs)
         (
@@ -994,9 +992,6 @@ class Generator(WarmupForwardMixin):
             device_tensors=device_inputs,
         )
 
-        # Replay must see CCL indices at 0 (same as at capture). Sync so prior work (e.g. process_output_prefill) is done before we reset and replay.
-        ttnn.synchronize_device(self.mesh_device)
-        self.model.tt_ccl.reset_gather_and_buffer_idx()
         ttnn.execute_trace(self.mesh_device, trace_id, cq_id=0, blocking=False)
 
         return tt_out_trace
