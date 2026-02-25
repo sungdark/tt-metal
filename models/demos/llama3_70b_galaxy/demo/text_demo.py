@@ -668,7 +668,7 @@ def create_tt_model(
     "device_params",
     [
         {
-            "trace_region_size": 206021184,
+            "trace_region_size": 216580672,
             "num_command_queues": 1,
             "dispatch_core_axis": ttnn.DispatchCoreAxis.COL,
             "worker_l1_size": 1345000,
