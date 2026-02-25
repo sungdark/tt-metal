@@ -137,7 +137,7 @@ void run_single_dfb_program(
             program,
             "tests/tt_metal/tt_metal/test_kernels/compute/dfb_t6_producer.cpp",
             logical_core,
-            ComputeConfig{.compile_args = producer_cta});
+            experimental::quasar::QuasarComputeConfig{.num_threads_per_cluster = 1, .compile_args = producer_cta});
         dfb_config.producer_risc_mask = 0x100;
     }
 
@@ -169,7 +169,7 @@ void run_single_dfb_program(
             program,
             "tests/tt_metal/tt_metal/test_kernels/compute/dfb_t6_consumer.cpp",
             logical_core,
-            ComputeConfig{.compile_args = consumer_cta});
+            experimental::quasar::QuasarComputeConfig{.num_threads_per_cluster = 1, .compile_args = consumer_cta});
         dfb_config.consumer_risc_mask = 0x100;
     }
 
@@ -250,7 +250,7 @@ void run_in_dfb_out_dfb_program(
         program,
         "tests/tt_metal/tt_metal/test_kernels/compute/dfb_t6.cpp",
         logical_core,
-        ComputeConfig{.compile_args = compute_cta});
+        experimental::quasar::QuasarComputeConfig{.num_threads_per_cluster = 1, .compile_args = compute_cta});
     dm2tensix_config.consumer_risc_mask = 0x100;
     tensix2dm_config.producer_risc_mask = 0x100;
 
