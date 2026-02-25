@@ -1732,11 +1732,12 @@ class MoeRoutedExpertOp:
                 value=1,
                 other_value=0,
             ),
+            # Don't perform loopback
             UnifiedCompileTimeCoreDescriptor(
                 named_compile_time_arg="is_mcast_grid_core",
-                core_range=ctx.mcast_grid,
-                value=1,
-                other_value=0,
+                core_range=ctx.sender_core,
+                value=0,
+                other_value=1,
             ),
             UnifiedCompileTimeCoreDescriptor(
                 named_compile_time_arg="is_gate_mm_core",

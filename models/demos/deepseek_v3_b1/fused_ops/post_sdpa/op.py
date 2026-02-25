@@ -1283,7 +1283,7 @@ class PostSDPA:
                     brisc_named_compile_time_args=brisc_named_compile_time_args,
                     trisc_named_compile_time_args=trisc_named_compile_time_args,
                     trisc_compute_config=ttnn.ComputeConfigDescriptor(
-                        math_fidelity=ttnn.MathFidelity.HiFi4,
+                        math_fidelity=ttnn.MathFidelity.LoFi,
                         math_approx_mode=False,
                         fp32_dest_acc_en=fp32_dest_acc_en,
                         dst_full_sync_en=fp32_dest_acc_en,
