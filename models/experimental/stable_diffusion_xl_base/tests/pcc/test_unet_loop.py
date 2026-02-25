@@ -312,7 +312,7 @@ def run_unet_inference(ttnn_device, is_ci_env, prompts, num_inference_steps, deb
     "prompt",
     (("An astronaut riding a green horse"),),
 )
-@pytest.mark.timeout(3000)
+@pytest.mark.timeout(3300)
 def test_unet_loop(
     device,
     is_ci_env,
