@@ -217,7 +217,7 @@ jobs:
               "tt-llama-text-ver": "llama3_70b_galaxy",
               "override-tt-config": "{\"dispatch_core_axis\": \"col\", \"sample_on_device_mode\": \"all\", \"fabric_config\": \"FABRIC_1D_RING\", \"worker_l1_size\": 1344544, \"trace_region_size\": 216580672}",
               "additional-server-args": "--data_parallel_size 4 --max_num_seqs 8",
-              "additional-benchmark-args": "--random-prefix-len 128",
+              "additional-benchmark-args": "--random-prefix-len 256",
               "sampling-tests": true,
               "multimodal": false,
               "co-owner-1-id": "U08E1JCDVNX",
@@ -326,7 +326,7 @@ jobs:
       volumes:
         - ${{ github.workspace }}/docker-job:/work # Subdir to workaround https://github.com/actions/runner/issues/691
         - /dev/hugepages-1G:/dev/hugepages-1G
-        - ${{ (matrix.test-group.runner-label == 'BH-QB-GE' && '/localdev/blackhole_demos/huggingface_data:/mnt/MLPerf/huggingface:ro') || '/mnt/MLPerf:/mnt/MLPerf:rw' }}
+        - ${{ (matrix.test-group.runner-label == 'BH-QB-GE' && '/localdev/blackhole_demos/huggingface_data:/mnt/MLPerf/huggingface:ro') || '/mnt/MLPerf:/mnt/MLPerf:ro' }}
       options: "--device /dev/tenstorrent"
     defaults:
       run:
