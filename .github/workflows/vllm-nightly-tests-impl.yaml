@@ -53,6 +53,7 @@ jobs:
               "mesh-device": "T3K",
               "override-tt-config": "{\"sample_on_device_mode\": \"decode_only\", \"fabric_config\": \"FABRIC_1D\", \"l1_small_size\": 4096}",
               "tt-llama-text-ver": "tt_transformers",
+              "structured-output": true,
               "multimodal": true,
               "co-owner-1-id": "U08E1JCDVNX",
               "co-owner-2-id": "U08BH66EXAL"
@@ -69,6 +70,7 @@ jobs:
               "additional-server-args": "--data_parallel_size 4 --max_num_seqs 32",
               "tt_mm_throttle_perf": 5,
               "tt-llama-text-ver": "tt_transformers",
+              "structured-output": true,
               "multimodal": true,
               "co-owner-1-id": "U08E1JCDVNX",
               "co-owner-2-id": "U08BH66EXAL"
@@ -131,6 +133,7 @@ jobs:
               "tt-llama-text-ver": "tt_transformers",
               "override-tt-config": "{\"fabric_config\": \"FABRIC_1D\"}",
               "multimodal": false,
+              "structured-output": true,
               "additional-benchmark-args": "--random-prefix-len 128",
               "co-owner-1-id": "U08E1JCDVNX",
               "co-owner-2-id": "U08CEGF78ET"
@@ -205,6 +208,7 @@ jobs:
               "override-tt-config": "{\"dispatch_core_axis\": \"col\", \"sample_on_device_mode\": \"all\", \"fabric_config\": \"FABRIC_1D_RING\", \"worker_l1_size\": 1344544, \"trace_region_size\": 184915840}",
               "additional-server-args": "--data_parallel_size 4 --max_num_seqs 8",
               "sampling-tests": true,
+              "structured-output": true,
               "multimodal": false,
               "co-owner-1-id": "U08E1JCDVNX",
               "co-owner-2-id": "U08CEGF78ET"
@@ -480,6 +484,7 @@ jobs:
             --model ${{ matrix.test-group.model }} \
             --num-prompts 32 \
             --percentile-metrics ttft,tpot,itl,e2el \
+            --dataset json-unique \
             --save-result \
             --result-filename output/vllm_result_structured.json \
             "${ADDITIONAL_BENCHMARK_ARGS[@]}" \
