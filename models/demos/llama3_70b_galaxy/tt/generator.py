@@ -594,13 +594,10 @@ class Generator(WarmupForwardMixin):
             if isinstance(tt_sampled, list):
                 tt_sampled = tt_sampled[0]
 
-            sampled_tokens = ttnn.to_torch(ttnn.get_device_tensors(tt_sampled)[0])
+            sampled_tokens = ttnn.to_torch(ttnn.get_device_tensors(tt_sampled)[0]).to(torch.int32)
 
             # sampled_tokens has 32 entries ordered by slot.
             sampled_tensor = sampled_tokens[0, 0, 0, :]  # Shape: [32]
-            # Indexing on CPU requires a dtype that supports index_cpu (e.g. long); sampling may return uint32.
-            if sampled_tensor.dtype == torch.uint32:
-                sampled_tensor = sampled_tensor.to(torch.long)
             output_toks = sampled_tensor[empty_slots]
 
             if tt_log_probs is not None:
@@ -1046,27 +1043,16 @@ class Generator(WarmupForwardMixin):
             "is_cur_pos_sharded": is_cur_pos_sharded,
             "is_page_table_sharded": is_page_table_sharded,
         }
+        self.model.sampling.seed_manager.get_new_values()
         if reset_inputs and sampling_params is not None:
             # If we have new inputs, we need to set up the sampling module again
             sampling_params = format_sampling_params(sampling_params, self.model_args.max_batch_size)
 
             sampling_module = self.model.sampling
             sampling_module.reset_sampling_params(sampling_params)
-            # Re-initialize per-slot RNGs for the current batch so that after condense (slot
-            # reassignment) each request keeps its own seed. Without this, a request that moved
-            # to a lower slot would use the previous occupant's RNG state and break determinism.
-            num_reqs = tokens.shape[0]
-            if getattr(sampling_params, "seed", None) is not None:
-                seed_list = sampling_params.seed if isinstance(sampling_params.seed, list) else [sampling_params.seed]
-                active_slots = list(range(num_reqs))
-                sampling_module.seed_manager.reset_seed(seed_list[:num_reqs], active_slots)
             if reset_batch:
                 sampling_module.reset_prompt_tokens(prompt_tokens)
                 sampling_module.reset_output_state(output_tokens)
-            # Advance RNGs for active slots and send to device so this step uses correct seeds
-            sampling_module.seed_manager.get_new_values(list(range(num_reqs)))
-        else:
-            self.model.sampling.seed_manager.get_new_values()
 
         if tt_out_logits_saved is not None:
             decode_kwargs["tt_out_logits_saved"] = tt_out_logits_saved
